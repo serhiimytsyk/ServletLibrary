@@ -25,6 +25,10 @@
     </filter-mapping>
     
     <listener>
+        <listener-class>smytsyk.finalProject.library.controller.SessionListener</listener-class>
+    </listener>
+
+    <listener>
         <listener-class>smytsyk.finalProject.library.controller.ContextListener</listener-class>
     </listener>
 

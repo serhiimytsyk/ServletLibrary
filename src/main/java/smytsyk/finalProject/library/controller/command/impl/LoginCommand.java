@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Command with user authentication
@@ -30,9 +31,18 @@ public class LoginCommand implements Command {
             session.setAttribute("error", I18N.translate("error_login", session));
             resp.sendRedirect("/Controller?command=go_to_login_page");
         } else {
-            log.debug("Log in is successful, login = " + login);
-            session.setAttribute("user", user);
-            redirect(req, resp, user);
+            Set<Integer> logged_user_ids = (Set<Integer>) req.getServletContext().getAttribute("logged_user_ids");
+            if (!logged_user_ids.contains(user.getId())) {
+                log.debug("Log in is successful, login = " + login);
+                logged_user_ids.add(user.getId());
+                req.getServletContext().setAttribute("logged_user_ids", logged_user_ids);
+                session.setAttribute("user", user);
+                redirect(req, resp, user);
+            } else {
+                log.debug("User is already logged id, login = " + login);
+                session.setAttribute("error", I18N.translate("already", session));
+                resp.sendRedirect("/Controller?command=go_to_login_page");
+            }
         }
     }
 

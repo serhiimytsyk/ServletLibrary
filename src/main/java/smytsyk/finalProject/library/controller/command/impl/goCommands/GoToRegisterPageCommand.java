@@ -13,7 +13,7 @@ import java.io.IOException;
 public class GoToRegisterPageCommand implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getSession().removeAttribute("user");
+        req.getSession().invalidate();
         req.getRequestDispatcher("/register.jsp").forward(req, resp);
     }
 }

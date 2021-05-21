@@ -13,7 +13,7 @@ import java.io.IOException;
 public class GoToMainPageCommand implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getSession().removeAttribute("user");
+        req.getSession().invalidate();
         req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 }
