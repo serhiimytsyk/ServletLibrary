@@ -1,5 +1,5 @@
-<%@ tag import="smytsyk.finalProject.library.entitiy.User" %>
-<%@ tag import="smytsyk.finalProject.library.service.I18N" %>
+<%@ tag import="smytsyk.final_project.library.entitiy.User" %>
+<%@ tag import="smytsyk.final_project.library.service.I18N" %>
 <%!User user;%>
 <%user = ((User)session.getAttribute("user"));%>
 

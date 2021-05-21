@@ -6,7 +6,7 @@
     
     <servlet>
         <servlet-name>Controller</servlet-name>
-        <servlet-class>smytsyk.finalProject.library.controller.Controller</servlet-class>
+        <servlet-class>smytsyk.final_project.library.controller.Controller</servlet-class>
     </servlet>
     
     <servlet-mapping>
@@ -16,7 +16,7 @@
 
     <filter>
         <filter-name>AccessFilter</filter-name>
-        <filter-class>smytsyk.finalProject.library.controller.AccessFilter</filter-class>
+        <filter-class>smytsyk.final_project.library.controller.AccessFilter</filter-class>
     </filter>
 
     <filter-mapping>
@@ -25,11 +25,11 @@
     </filter-mapping>
     
     <listener>
-        <listener-class>smytsyk.finalProject.library.controller.SessionListener</listener-class>
+        <listener-class>smytsyk.final_project.library.controller.SessionListener</listener-class>
     </listener>
 
     <listener>
-        <listener-class>smytsyk.finalProject.library.controller.ContextListener</listener-class>
+        <listener-class>smytsyk.final_project.library.controller.ContextListener</listener-class>
     </listener>
 
     <error-page>

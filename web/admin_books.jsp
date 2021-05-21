@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="smytsyk.finalProject.library.service.I18N" %>
+<%@ page import="smytsyk.final_project.library.service.I18N" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="tf"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>

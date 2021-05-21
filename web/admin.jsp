@@ -1,5 +1,5 @@
-<%@ page import="smytsyk.finalProject.library.service.I18N" %>
-<%@ page import="smytsyk.finalProject.library.entitiy.User" %>
+<%@ page import="smytsyk.final_project.library.service.I18N" %>
+<%@ page import="smytsyk.final_project.library.entitiy.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="tf"%>
 
