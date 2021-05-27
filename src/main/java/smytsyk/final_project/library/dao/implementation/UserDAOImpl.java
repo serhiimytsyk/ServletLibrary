@@ -19,15 +19,16 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getEntityFromRow(ResultSet rs) {
-        User user = new User();
+        User user;
         try {
-            user.setId(rs.getInt(1));
-            user.setLogin(rs.getString(2));
-            user.setPassword(rs.getString(3));
-            user.setFirstName(rs.getString(4));
-            user.setLastName(rs.getString(5));
-            user.setEmail(rs.getString(6));
-            user.setRoleId(rs.getInt(7));
+            user = User.builder().
+                    id(rs.getInt(1)).
+                    login(rs.getString(2)).
+                    password(rs.getString(3)).
+                    firstName(rs.getString(4)).
+                    lastName(rs.getString(5)).
+                    email(rs.getString(6)).
+                    roleId(rs.getInt(7)).build();
         } catch (SQLException e) {
             log.error("Cannot get User from table row ", e);
             user = null;

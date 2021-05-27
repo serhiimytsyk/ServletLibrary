@@ -52,4 +52,41 @@ public class Order implements Entity {
     public void setOrderStatusId(int orderStatusId) {
         this.orderStatusId = orderStatusId;
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Order order = new Order();
+
+        public Order build() {
+            return order;
+        }
+
+        public Builder id(int id) {
+            order.id = id;
+            return this;
+        }
+
+        public Builder readerId(int readerId) {
+            order.readerId = readerId;
+            return this;
+        }
+
+        public Builder bookId(int bookId) {
+            order.bookId = bookId;
+            return this;
+        }
+
+        public Builder returnDate(LocalDate returnDate) {
+            order.returnDate = returnDate;
+            return this;
+        }
+
+        public Builder orderStatusId(int orderStatusId) {
+            order.orderStatusId = orderStatusId;
+            return this;
+        }
+    }
 }

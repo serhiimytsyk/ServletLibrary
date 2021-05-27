@@ -13,7 +13,6 @@ import java.io.IOException;
 public class GoToErrorPageCommand implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getSession().invalidate();
         req.getRequestDispatcher("/error_page.jsp").forward(req, resp);
     }
 }

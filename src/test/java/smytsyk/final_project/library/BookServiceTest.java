@@ -6,29 +6,9 @@ import smytsyk.final_project.library.service.BookService;
 
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BookServiceTest {
-    @Test
-    public void testIntInList() {
-        BookService bs = new BookService();
-        List<Integer> list = new ArrayList<>();
-        Assert.assertFalse(bs.isListWithNumber(list, 0));
-        Assert.assertFalse(bs.isListWithNumber(list, -1));
-        Assert.assertFalse(bs.isListWithNumber(list, 1));
-        list.add(2);
-        list.add(-1);
-        list.add(1000);
-        list.add(1);
-        list.add(-1);
-        Assert.assertTrue(bs.isListWithNumber(list, -1));
-        Assert.assertFalse(bs.isListWithNumber(list, 0));
-        Assert.assertTrue(bs.isListWithNumber(list, 1000));
-        Assert.assertTrue(bs.isListWithNumber(list, 1));
-    }
-
-    @Test
+    /*@Test
     public void testValidDate() {
         BookService os = new BookService();
         Assert.assertFalse(os.isValidDate(null));
@@ -103,5 +83,5 @@ public class BookServiceTest {
         Assert.assertTrue(us.isValidPublisher("a"));
         Assert.assertTrue(us.isValidPublisher("a".repeat(30)));
         Assert.assertTrue(us.isValidPublisher("aAа   Ая-ёиі ы-ho "));
-    }
+    }*/
 }

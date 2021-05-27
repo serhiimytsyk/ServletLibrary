@@ -1,5 +1,7 @@
 package smytsyk.final_project.library.entitiy;
 
+import java.time.LocalDate;
+
 /**
  * User
  * Contains login, password, and personal information
@@ -67,5 +69,52 @@ public class User implements Entity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private User user = new User();
+
+        public User build() {
+            return user;
+        }
+
+        public Builder id(int id) {
+            user.id = id;
+            return this;
+        }
+
+        public Builder login(String login) {
+            user.login = login;
+            return this;
+        }
+
+        public Builder password(String password) {
+            user.password = password;
+            return this;
+        }
+
+        public Builder firstName(String firstName) {
+            user.firstName = firstName;
+            return this;
+        }
+
+        public Builder lastName(String lastName) {
+            user.lastName = lastName;
+            return this;
+        }
+
+        public Builder email(String email) {
+            user.email = email;
+            return this;
+        }
+
+        public Builder roleId(int roleId) {
+            user.roleId = roleId;
+            return this;
+        }
     }
 }

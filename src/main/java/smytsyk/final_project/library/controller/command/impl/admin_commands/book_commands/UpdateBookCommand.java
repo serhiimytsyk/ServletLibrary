@@ -1,6 +1,7 @@
 package smytsyk.final_project.library.controller.command.impl.admin_commands.book_commands;
 
 import smytsyk.final_project.library.controller.command.Command;
+import smytsyk.final_project.library.controller.command.impl.BookUtil;
 import smytsyk.final_project.library.service.BookService;
 import smytsyk.final_project.library.service.I18N;
 
@@ -21,9 +22,14 @@ public class UpdateBookCommand implements Command {
         String author = req.getParameter("author");
         String publisher = req.getParameter("publisher");
         String date = req.getParameter("publication_date");
-        if (!new BookService().updateBook(id, name, author, publisher, date)) {
+        if (!(BookUtil.isValidName(name) && BookUtil.isValidAuthor(author) && BookUtil.isValidPublisher(publisher) && BookUtil.isValidDate(date))) {
             HttpSession session = req.getSession();
             if (session != null) session.setAttribute("error", I18N.translate("error_book_add", session));
+        } else {
+            if (!new BookService().updateBook(id, name, author, publisher, date)) {
+                HttpSession session = req.getSession();
+                if (session != null) session.setAttribute("error", I18N.translate("error_book_add", session));
+            }
         }
         resp.sendRedirect("/Controller?command=go_to_admin_books_page");
     }

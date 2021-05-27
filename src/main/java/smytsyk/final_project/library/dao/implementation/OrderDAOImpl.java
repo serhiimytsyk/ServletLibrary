@@ -1,14 +1,13 @@
 package smytsyk.final_project.library.dao.implementation;
 
 import org.apache.log4j.Logger;
+import smytsyk.final_project.library.dao.DAOFactory;
+import smytsyk.final_project.library.dao.DBManager;
 import smytsyk.final_project.library.dao.interfaces.OrderDAO;
 import smytsyk.final_project.library.entitiy.Order;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
-import java.sql.Date;
 
 /**
  * Implementation of OrderDAO using POSTGRES
@@ -21,16 +20,16 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public Order getEntityFromRow(ResultSet rs) {
-        Order order = new Order();
+        Order order;
         try {
-            order.setId(rs.getInt(1));
-            order.setReaderId(rs.getInt(2));
-            order.setBookId(rs.getInt(3));
-            order.setOrderStatusId(rs.getInt(4));
             Date returnDate = rs.getDate(5);
             LocalDate date = returnDate == null ? null :
                     returnDate.toLocalDate();
-            order.setReturnDate(date);
+            order = Order.builder().id(rs.getInt(1)).
+                    readerId(rs.getInt(2)).
+                    bookId(rs.getInt(3)).
+                    orderStatusId(rs.getInt(4)).
+                    returnDate(date).build();
         } catch (SQLException e) {
             log.error("Cannot get Order from table row ", e);
             order = null;
@@ -49,6 +48,45 @@ public class OrderDAOImpl implements OrderDAO {
         } catch (SQLException e) {
             log.error("Cannot insert Order to table row ", e);
         }
+    }
+
+    @Override
+    public boolean confirmOrder(int id) {
+        String orders_table = DAOFactory.getOrderDAO().getTable();
+        String books_table = DAOFactory.getBookDAO().getTable();
+        String subquery = "SELECT id FROM " + books_table + " " +
+                "WHERE id NOT IN " +
+                "(SELECT book_id FROM " + orders_table + " WHERE order_status_id = 1)";
+        String query = "UPDATE " + getTable() + " SET order_status_id = 1 " +
+                "WHERE id = ? " +
+                "AND book_id IN (" + subquery + ") " +
+                "AND order_status_id = 0 " +
+                "AND return_date >= now()::date;";
+        try (Connection connection = DBManager.getInstance().getConnection()){
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, id);
+                return preparedStatement.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            logError("Cannot confirm order ", e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean closeOrder(int id) {
+        String query = "UPDATE " + getTable() + " SET order_status_id = 2 " +
+                "WHERE id = ? " +
+                "AND order_status_id = 1;";
+        try (Connection connection = DBManager.getInstance().getConnection()){
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, id);
+                return preparedStatement.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            logError("Cannot close order ", e);
+        }
+        return false;
     }
 
     @Override

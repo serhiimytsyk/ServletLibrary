@@ -26,14 +26,21 @@ public class RegisterCommand implements Command {
         String email = req.getParameter("email");
         log.debug("Trying to register person with login = " + login + " first name = " +
                 firstName + " last name = " + lastName + " email = " + email);
-        if (new UserService().insertUser(login, password, firstName, lastName, email)) {
-            log.debug("Registration is successful, login = " + login);
-            resp.sendRedirect("/Controller?command=go_to_main_page");
-        } else {
+        if (!(UserUtil.isValidLogin(login) && UserUtil.isValidPassword(password) && UserUtil.isValidEmail(email) && UserUtil.isValidName(firstName) && UserUtil.isValidName(lastName))) {
             log.debug("Registration is not successful");
             HttpSession session = req.getSession();
             if (session != null) session.setAttribute("error", I18N.translate("error_reg", session));
             resp.sendRedirect("/Controller?command=go_to_register_page");
+        } else {
+            if (new UserService().insertUser(login, password, firstName, lastName, email)) {
+                log.debug("Registration is successful, login = " + login);
+                resp.sendRedirect("/Controller?command=go_to_main_page");
+            } else {
+                log.debug("Registration is not successful");
+                HttpSession session = req.getSession();
+                if (session != null) session.setAttribute("error", I18N.translate("error_reg", session));
+                resp.sendRedirect("/Controller?command=go_to_register_page");
+            }
         }
     }
 }

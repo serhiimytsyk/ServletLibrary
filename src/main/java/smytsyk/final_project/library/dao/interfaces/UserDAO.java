@@ -34,4 +34,18 @@ public interface UserDAO extends AbstractDao<User> {
         }
         return user;
     }
+
+    default boolean changeRole(int id, int role) {
+        String query = "UPDATE " + getTable() + " SET role_id = ? WHERE id = ?;";
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, role);
+                preparedStatement.setInt(2, id);
+                return preparedStatement.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            logError("Cannot change user's role ", e);
+        }
+        return false;
+    }
 }

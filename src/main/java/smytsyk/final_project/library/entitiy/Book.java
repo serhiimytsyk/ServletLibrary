@@ -52,4 +52,41 @@ public class Book implements Entity {
     public void setPublicationDate(LocalDate publicationDate) {
         this.publicationDate = publicationDate;
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Book book = new Book();
+
+        public Book build() {
+            return book;
+        }
+
+        public Builder id(int id) {
+            book.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            book.name = name;
+            return this;
+        }
+
+        public Builder author(String author) {
+            book.author = author;
+            return this;
+        }
+
+        public Builder publisher(String publisher) {
+            book.publisher = publisher;
+            return this;
+        }
+
+        public Builder publicationDate(LocalDate publicationDate) {
+            book.publicationDate = publicationDate;
+            return this;
+        }
+    }
 }

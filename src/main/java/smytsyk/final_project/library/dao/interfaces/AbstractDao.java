@@ -16,18 +16,30 @@ public interface AbstractDao<T extends Entity> {
      * Inserts entity to DB(with autoincrement)
      */
     default boolean insert(T entity) {
-        int nexId = getNewId();
-        entity.setId(nexId);
         String query = "INSERT INTO " + getTable() + " VALUES(" + getUnknownValues() + ");";
-        try (Connection connection = DBManager.getInstance().getConnection()) {
+        boolean success = false;
+        Connection connection = null;
+        try  {
+            connection = DBManager.getInstance().getConnection();
+            connection.setAutoCommit(false);
+            int nexId = getNewId(connection);
+            entity.setId(nexId);
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 setRowByEntity(preparedStatement, entity);
-                return preparedStatement.executeUpdate() > 0;
+                if (preparedStatement.executeUpdate() > 0) {
+                    commit(connection);
+                    success = true;
+                } else {
+                    rollback(connection);
+                }
             }
         } catch (SQLException e) {
+            rollback(connection);
             logError("Cannot insert entity to table ", e);
+        } finally {
+            close(connection);
+            return success;
         }
-        return false;
     }
 
     /**
@@ -74,50 +86,48 @@ public interface AbstractDao<T extends Entity> {
     /**
      * Updates information about entity in the DB
      */
-    default void update(T entity) {
+    default boolean update(T entity) {
         String query = "UPDATE " + getTable() + " SET " + getUnknownPairsFieldValue() + " WHERE id = ?;";
         try (Connection connection = DBManager.getInstance().getConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 setRowByEntity(preparedStatement, entity);
                 preparedStatement.setInt(getNumberOfFields() + 1, entity.getId());
-                preparedStatement.executeUpdate();
+                return preparedStatement.executeUpdate() > 0;
             }
         } catch (SQLException e) {
             logError("Cannot update entity in table ", e);
         }
+        return false;
     }
 
     /**
      * Deletes entity by ID
      */
-    default void delete(int id) {
+    default boolean delete(int id) {
         String query = "DELETE FROM " + getTable() + " WHERE id = ?;";
         try (Connection connection = DBManager.getInstance().getConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, id);
-                preparedStatement.executeUpdate();
+                return preparedStatement.executeUpdate() > 0;
             }
         } catch (SQLException e) {
             logError("Cannot delete entity from table ", e);
         }
+        return false;
     }
 
     /**
      * Return new id to insert in table
      */
-    private int getNewId() {
+    private int getNewId(Connection connection) throws SQLException {
         int id = 0;
         String query = "SELECT MAX(id) FROM " + getTable() + ";";
-        try (Connection connection = DBManager.getInstance().getConnection()) {
-            try (Statement statement = connection.createStatement()) {
-                try (ResultSet resultSet = statement.executeQuery(query)) {
-                    if (resultSet.next()) {
-                        id = Integer.max(id, resultSet.getInt(1));
-                    }
+        try (Statement statement = connection.createStatement()) {
+            try (ResultSet resultSet = statement.executeQuery(query)) {
+                if (resultSet.next()) {
+                    id = Integer.max(id, resultSet.getInt(1));
                 }
             }
-        } catch (SQLException e) {
-            logError("Cannot get new id ", e);
         }
         return id + 1;
     }
@@ -165,5 +175,31 @@ public interface AbstractDao<T extends Entity> {
         StringBuilder sb = new StringBuilder("id = ?");
         for (int i = 1; i < getNumberOfFields(); i++) sb.append(", ").append(getFields()[i]).append(" = ?");
         return sb.toString();
+    }
+
+    private void commit(Connection connection) {
+        try {
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (Exception e) {
+            logError("Cannot commit ", e);
+        }
+    }
+
+    private void rollback(Connection connection) {
+        try {
+            connection.rollback();
+            connection.setAutoCommit(true);
+        } catch (Exception e) {
+            logError("Cannot rollback ", e);
+        }
+    }
+
+    private void close(Connection connection) {
+        try {
+            connection.close();
+        } catch (Exception e) {
+            logError("Cannot close ", e);
+        }
     }
 }
