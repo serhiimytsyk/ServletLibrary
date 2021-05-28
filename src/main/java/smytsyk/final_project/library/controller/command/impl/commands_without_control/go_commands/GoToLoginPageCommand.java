@@ -1,7 +1,7 @@
-package smytsyk.final_project.library.controller.command.impl.go_commands;
+package smytsyk.final_project.library.controller.command.impl.commands_without_control.go_commands;
 
 import smytsyk.final_project.library.controller.command.Command;
-import smytsyk.final_project.library.controller.command.impl.LoginCommand;
+import smytsyk.final_project.library.controller.command.impl.commands_without_control.LoginCommand;
 import smytsyk.final_project.library.entitiy.User;
 
 import javax.servlet.ServletException;

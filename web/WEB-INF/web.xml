@@ -6,7 +6,7 @@
     
     <servlet>
         <servlet-name>Controller</servlet-name>
-        <servlet-class>smytsyk.final_project.library.controller.Controller</servlet-class>
+        <servlet-class>smytsyk.final_project.library.controller.DispatcherServlet</servlet-class>
     </servlet>
     
     <servlet-mapping>

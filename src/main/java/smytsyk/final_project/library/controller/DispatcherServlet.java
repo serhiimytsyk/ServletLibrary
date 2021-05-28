@@ -13,10 +13,10 @@ import java.io.IOException;
 /**
  * Servlet that executes input commands
  */
-public class Controller extends HttpServlet {
+public class DispatcherServlet extends HttpServlet {
     private static final long serialVersionUID = 6769021265291542103L;
 
-    private static final Logger log = Logger.getLogger(Controller.class);
+    private static final Logger log = Logger.getLogger(DispatcherServlet.class);
 
     /**
      * Implementation of GET method

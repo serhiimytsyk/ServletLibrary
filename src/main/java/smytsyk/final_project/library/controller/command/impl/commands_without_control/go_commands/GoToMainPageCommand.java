@@ -1,4 +1,4 @@
-package smytsyk.final_project.library.controller.command.impl.go_commands;
+package smytsyk.final_project.library.controller.command.impl.commands_without_control.go_commands;
 
 import smytsyk.final_project.library.controller.command.Command;
 
@@ -8,11 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Command that redirects user to registration page
+ * Command that redirects user to main page
  */
-public class GoToRegisterPageCommand implements Command {
+public class GoToMainPageCommand implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/register.jsp").forward(req, resp);
+        req.getSession().invalidate();
+        req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 }

@@ -1,8 +1,8 @@
 package smytsyk.final_project.library.controller.command;
 
-import smytsyk.final_project.library.controller.command.impl.InvalidCommand;
-import smytsyk.final_project.library.controller.command.impl.LoginCommand;
-import smytsyk.final_project.library.controller.command.impl.RegisterCommand;
+import smytsyk.final_project.library.controller.command.impl.commands_without_control.InvalidCommand;
+import smytsyk.final_project.library.controller.command.impl.commands_without_control.LoginCommand;
+import smytsyk.final_project.library.controller.command.impl.commands_without_control.RegisterCommand;
 import smytsyk.final_project.library.controller.command.impl.admin_commands.go_commands.GoToAdminBooksPageCommand;
 import smytsyk.final_project.library.controller.command.impl.admin_commands.go_commands.GoToAdminUsersPageCommand;
 import smytsyk.final_project.library.controller.command.impl.admin_commands.go_commands.ReturnToAdminPageCommand;
@@ -16,8 +16,8 @@ import smytsyk.final_project.library.controller.command.impl.admin_commands.book
 import smytsyk.final_project.library.controller.command.impl.admin_commands.book_commands.UpdateBookCommand;
 import smytsyk.final_project.library.controller.command.impl.banned_commands.ReturnToBannedPageCommand;
 import smytsyk.final_project.library.controller.command.impl.banned_commands.UpdateUserBannedCommand;
-import smytsyk.final_project.library.controller.command.impl.go_commands.GoToErrorPageCommand;
-import smytsyk.final_project.library.controller.command.impl.go_commands.GoToRegisterPageCommand;
+import smytsyk.final_project.library.controller.command.impl.commands_without_control.go_commands.GoToErrorPageCommand;
+import smytsyk.final_project.library.controller.command.impl.commands_without_control.go_commands.GoToRegisterPageCommand;
 import smytsyk.final_project.library.controller.command.impl.librarian_commands.UpdateUserLibrarianCommand;
 import smytsyk.final_project.library.controller.command.impl.librarian_commands.orders_commands.AcceptOrderCommand;
 import smytsyk.final_project.library.controller.command.impl.librarian_commands.orders_commands.CloseOrderCommand;
@@ -27,9 +27,9 @@ import smytsyk.final_project.library.controller.command.impl.reader_commands.go_
 import smytsyk.final_project.library.controller.command.impl.reader_commands.go_commands.ReturnToReaderPageCommand;
 import smytsyk.final_project.library.controller.command.impl.reader_commands.SendOrderCommand;
 import smytsyk.final_project.library.controller.command.impl.reader_commands.UpdateUserReaderCommand;
-import smytsyk.final_project.library.controller.command.impl.SwitchLanguageCommand;
-import smytsyk.final_project.library.controller.command.impl.go_commands.GoToLoginPageCommand;
-import smytsyk.final_project.library.controller.command.impl.go_commands.GoToMainPageCommand;
+import smytsyk.final_project.library.controller.command.impl.commands_without_control.SwitchLanguageCommand;
+import smytsyk.final_project.library.controller.command.impl.commands_without_control.go_commands.GoToLoginPageCommand;
+import smytsyk.final_project.library.controller.command.impl.commands_without_control.go_commands.GoToMainPageCommand;
 import smytsyk.final_project.library.controller.command.impl.librarian_commands.go_commands.*;
 
 import java.util.HashMap;

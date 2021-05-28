@@ -1,7 +1,8 @@
-package smytsyk.final_project.library.controller.command.impl;
+package smytsyk.final_project.library.controller.command.impl.commands_without_control;
 
 import org.apache.log4j.Logger;
 import smytsyk.final_project.library.controller.command.Command;
+import smytsyk.final_project.library.controller.command.impl.UserUtil;
 import smytsyk.final_project.library.service.I18N;
 import smytsyk.final_project.library.service.UserService;
 
