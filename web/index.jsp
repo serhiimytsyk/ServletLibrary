@@ -6,7 +6,6 @@
 
     <h1><%=I18N.translate("welcome", session)%></h1>
 
-    <tf:logout/>
     <tf:tagError/>
 
     <form action="Controller" method="get">

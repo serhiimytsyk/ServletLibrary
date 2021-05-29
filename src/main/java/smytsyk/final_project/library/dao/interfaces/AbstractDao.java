@@ -18,28 +18,29 @@ public interface AbstractDao<T extends Entity> {
     default boolean insert(T entity) {
         String query = "INSERT INTO " + getTable() + " VALUES(" + getUnknownValues() + ");";
         boolean success = false;
-        Connection connection = null;
-        try  {
-            connection = DBManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
-            int nexId = getNewId(connection);
-            entity.setId(nexId);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                setRowByEntity(preparedStatement, entity);
-                if (preparedStatement.executeUpdate() > 0) {
-                    commit(connection);
-                    success = true;
-                } else {
-                    rollback(connection);
+        try (Connection connection = DBManager.getInstance().getConnection();) {
+            try {
+                connection.setAutoCommit(false);
+                int nexId = getNewId(connection);
+                entity.setId(nexId);
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    setRowByEntity(preparedStatement, entity);
+                    if (preparedStatement.executeUpdate() > 0) {
+                        connection.commit();
+                        success = true;
+                    } else {
+                        connection.rollback();
+                    }
                 }
+            } catch (Exception e) {
+                connection.rollback();
+            } finally {
+                connection.setAutoCommit(true);
             }
         } catch (SQLException e) {
-            rollback(connection);
             logError("Cannot insert entity to table ", e);
-        } finally {
-            close(connection);
-            return success;
         }
+        return success;
     }
 
     /**
@@ -175,31 +176,5 @@ public interface AbstractDao<T extends Entity> {
         StringBuilder sb = new StringBuilder("id = ?");
         for (int i = 1; i < getNumberOfFields(); i++) sb.append(", ").append(getFields()[i]).append(" = ?");
         return sb.toString();
-    }
-
-    private void commit(Connection connection) {
-        try {
-            connection.commit();
-            connection.setAutoCommit(true);
-        } catch (Exception e) {
-            logError("Cannot commit ", e);
-        }
-    }
-
-    private void rollback(Connection connection) {
-        try {
-            connection.rollback();
-            connection.setAutoCommit(true);
-        } catch (Exception e) {
-            logError("Cannot rollback ", e);
-        }
-    }
-
-    private void close(Connection connection) {
-        try {
-            connection.close();
-        } catch (Exception e) {
-            logError("Cannot close ", e);
-        }
     }
 }

@@ -1,38 +1,39 @@
 package smytsyk.final_project.library.service;
 
 import smytsyk.final_project.library.dao.DAOFactory;
+import smytsyk.final_project.library.dao.interfaces.OrderDAO;
 import smytsyk.final_project.library.entitiy.Order;
 
 import java.time.LocalDate;
 import static java.time.temporal.ChronoUnit.DAYS;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Class with all needed services with orders
  */
 public class OrderService {
+    private final OrderDAO orderDAO = DAOFactory.getOrderDAO();
+
     /**
      * Deletes order by id
      */
     public void deleteOrder(int id) {
-        DAOFactory.getOrderDAO().delete(id);
+        orderDAO.delete(id);
     }
 
     /**
      * Returns all unconfirmed orders
      */
     public List<Order> getUnconfirmedOrders() {
-        return DAOFactory.getOrderDAO().getAll().stream().filter(o -> o.getOrderStatusId() == 0).collect(Collectors.toList());
+        return orderDAO.getUnconfirmedOrders();
     }
 
     /**
      * Returns all confirmed orders of this user
      */
     public List<Order> getConfirmedOrdersByUser(int user_id) {
-        return DAOFactory.getOrderDAO().getAll().stream().filter(o -> o.getOrderStatusId() == 1).
-                filter(o -> o.getReaderId() == user_id).collect(Collectors.toList());
+        return orderDAO.getConfirmedOrdersByUserId(user_id);
     }
 
     /**
@@ -45,21 +46,21 @@ public class OrderService {
                 readerId(userId).
                 orderStatusId(0).
                 returnDate(parseDate(date)).build();
-        return DAOFactory.getOrderDAO().insert(order);
+        return orderDAO.insert(order);
     }
 
     /**
      * Confirms order by id. Returns if it's successful
      */
     public boolean confirmOrder(int id) {
-        return DAOFactory.getOrderDAO().confirmOrder(id);
+        return orderDAO.confirmOrder(id);
     }
 
     /**
      * Closes order. Returns if it's successful
      */
     public boolean closeOrder(int id) {
-        return DAOFactory.getOrderDAO().closeOrder(id);
+        return orderDAO.closeOrder(id);
     }
 
     /**

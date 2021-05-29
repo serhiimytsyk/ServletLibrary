@@ -1,12 +1,13 @@
 package smytsyk.final_project.library.dao.implementation;
 
 import org.apache.log4j.Logger;
+import smytsyk.final_project.library.dao.DBManager;
 import smytsyk.final_project.library.dao.interfaces.UserDAO;
 import smytsyk.final_project.library.entitiy.User;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of UserDAO using POSTGRES
@@ -49,6 +50,79 @@ public class UserDAOImpl implements UserDAO {
         } catch (SQLException e) {
             log.error("Cannot insert User to table row ", e);
         }
+    }
+
+    @Override
+    public boolean changeRole(int id, int role) {
+        String query = "UPDATE " + getTable() + " SET role_id = ? WHERE id = ?;";
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, role);
+                preparedStatement.setInt(2, id);
+                return preparedStatement.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            logError("Cannot change user's role ", e);
+        }
+        return false;
+    }
+
+    @Override
+    public User get(String login) {
+        User user = null;
+        String query = "SELECT * FROM " + getTable() + " WHERE login = ?;";
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, login);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        user = getEntityFromRow(resultSet);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logError("Cannot get User from table ", e);
+            user = null;
+        }
+        return user;
+    }
+
+    @Override
+    public List<User> getNotAdminUsers() {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM " + getTable() + " WHERE role_id < 3;";
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                try (ResultSet resultSet = statement.executeQuery(query)) {
+                    while (resultSet.next()) {
+                        User user = getEntityFromRow(resultSet);
+                        users.add(user);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logError("Cannot get not-admin users from table ", e);
+        }
+        return users;
+    }
+
+    @Override
+    public List<User> getAllReaders() {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM " + getTable() + " WHERE role_id = 1;";
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                try (ResultSet resultSet = statement.executeQuery(query)) {
+                    while (resultSet.next()) {
+                        User user = getEntityFromRow(resultSet);
+                        users.add(user);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logError("Cannot get readers from table ", e);
+        }
+        return users;
     }
 
     @Override

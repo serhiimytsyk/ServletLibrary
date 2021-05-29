@@ -8,6 +8,8 @@ import smytsyk.final_project.library.entitiy.Order;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of OrderDAO using POSTGRES
@@ -87,6 +89,45 @@ public class OrderDAOImpl implements OrderDAO {
             logError("Cannot close order ", e);
         }
         return false;
+    }
+
+    @Override
+    public List<Order> getUnconfirmedOrders() {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT * FROM " + getTable() + " WHERE order_status_id = 0;";
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                try (ResultSet resultSet = statement.executeQuery(query)) {
+                    while (resultSet.next()) {
+                        Order order = getEntityFromRow(resultSet);
+                        orders.add(order);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logError("Cannot get entities from table ", e);
+        }
+        return orders;
+    }
+
+    @Override
+    public List<Order> getConfirmedOrdersByUserId(int id) {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT * FROM " + getTable() + " WHERE order_status_id = 1 AND reader_id = ?;";
+        try (Connection connection = DBManager.getInstance().getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, id);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        Order order = getEntityFromRow(resultSet);
+                        orders.add(order);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logError("Cannot get entities from table ", e);
+        }
+        return orders;
     }
 
     @Override

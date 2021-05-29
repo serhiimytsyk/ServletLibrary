@@ -1,24 +1,26 @@
 package smytsyk.final_project.library.service;
 
 import smytsyk.final_project.library.dao.DAOFactory;
+import smytsyk.final_project.library.dao.interfaces.UserDAO;
 import smytsyk.final_project.library.entitiy.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Class with all needed services with users
  */
 public class UserService {
+    private final UserDAO userDAO = DAOFactory.getUserDAO();
+
     /**
      * Gets user by login and password. If user doesn't exist, returns null
      */
     public User getUserByLoginAndPassword(String login, String password) {
         if (login == null || password == null) return null;
-        User user = DAOFactory.getUserDAO().get(login);
+        User user = userDAO.get(login);
         if (user == null) return null;
         return password.equals(user.getPassword()) ? user : null;
     }
@@ -27,7 +29,7 @@ public class UserService {
      * Gets user by id. If user doesn't exist, returns null
      */
     public User getUser(int id) {
-        return DAOFactory.getUserDAO().get(id);
+        return userDAO.get(id);
     }
 
     /**
@@ -41,7 +43,7 @@ public class UserService {
                 lastName(lastName).
                 email(email).
                 roleId(1).build();
-        return DAOFactory.getUserDAO().insert(user);
+        return userDAO.insert(user);
     }
 
     /**
@@ -56,21 +58,23 @@ public class UserService {
                 lastName(lastName).
                 email(email).
                 roleId(role).build();
-        return DAOFactory.getUserDAO().update(user);
+        return userDAO.update(user);
     }
 
     /**
      * Returns list of all users
      */
     public List<User> getAllUsers() {
-        return DAOFactory.getUserDAO().getAll().stream().filter(u -> u.getRoleId() != 3).collect(Collectors.toList());
+        return userDAO.getNotAdminUsers();
     }
+
+
 
     /**
      * Returns all readers
      */
     public List<User> getAllReaders() {
-        return getAllUsers().stream().filter(u -> u.getRoleId() == 1).collect(Collectors.toList());
+        return userDAO.getAllReaders();
     }
 
     /**

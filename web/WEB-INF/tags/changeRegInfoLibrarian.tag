@@ -5,7 +5,7 @@
 
 <form action="Controller" method="post">
     <input type="hidden" name="command" value="update_reg_librarian">
-    <input type="hidden" name="user_login" value=<%=user.getLogin()%>>>
+    <input type="hidden" name="user_login" value=<%=user.getLogin()%>>
     <input type="hidden" name="user_id" value=<%=user.getId()%>>
     <table>
         <tr>

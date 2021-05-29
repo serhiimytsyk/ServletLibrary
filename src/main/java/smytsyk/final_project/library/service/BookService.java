@@ -1,6 +1,7 @@
 package smytsyk.final_project.library.service;
 
 import smytsyk.final_project.library.dao.DAOFactory;
+import smytsyk.final_project.library.dao.interfaces.BookDAO;
 import smytsyk.final_project.library.entitiy.Book;
 
 import java.time.LocalDate;
@@ -11,32 +12,33 @@ import java.util.List;
  * Class with all needed services with books
  */
 public class BookService {
+    private final BookDAO bookDAO = DAOFactory.getBookDAO();
     /**
      * Returns all books
      */
     public List<Book> getAllBooks() {
-        return DAOFactory.getBookDAO().getAll();
+        return bookDAO.getAll();
     }
 
     /**
      * Returns all free books
      */
     public List<Book> getFreeBooks() {
-        return DAOFactory.getBookDAO().getFreeBooks();
+        return bookDAO.getFreeBooks();
     }
 
     /**
      * Deletes book by id
      */
     public void deleteBook(int id) {
-        DAOFactory.getBookDAO().delete(id);
+        bookDAO.delete(id);
     }
 
     /**
      * Gets book by id. If book doesn't exist return null
      */
     public Book getBook(int id) {
-        return DAOFactory.getBookDAO().get(id);
+        return bookDAO.get(id);
     }
 
     /**
@@ -48,7 +50,7 @@ public class BookService {
                 author(author).
                 publisher(publisher).
                 publicationDate(parseDate(date)).build();
-        return DAOFactory.getBookDAO().insert(book);
+        return bookDAO.insert(book);
     }
 
     /**
@@ -61,8 +63,7 @@ public class BookService {
                 author(author).
                 publisher(publisher).
                 publicationDate(parseDate(date)).build();
-        DAOFactory.getBookDAO().update(book);
-        return true;
+        return bookDAO.update(book);
     }
 
     /**
@@ -72,5 +73,4 @@ public class BookService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         return LocalDate.parse(date, formatter);
     }
-
 }
