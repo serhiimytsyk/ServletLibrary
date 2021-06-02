@@ -68,8 +68,6 @@ public class UserService {
         return userDAO.getNotAdminUsers();
     }
 
-
-
     /**
      * Returns all readers
      */
@@ -82,7 +80,7 @@ public class UserService {
      */
     public void changeRole(HttpServletRequest req, HttpServletResponse resp, int role) throws IOException {
         int user_id = Integer.parseInt(req.getParameter("user_id"));
-        if (DAOFactory.getUserDAO().changeRole(user_id, role)) {
+        if (userDAO.changeRole(user_id, role)) {
             resp.sendRedirect("/Controller?command=go_to_admin_users_page");
         } else {
             resp.sendRedirect("/Controller?command=go_to_error_page");

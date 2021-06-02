@@ -1,6 +1,7 @@
 package smytsyk.final_project.library.controller.command.impl.reader_commands.go_commands;
 
 import smytsyk.final_project.library.controller.command.Command;
+import smytsyk.final_project.library.controller.command.impl.PaginationUtil;
 import smytsyk.final_project.library.entitiy.Book;
 import smytsyk.final_project.library.service.BookService;
 
@@ -27,14 +28,8 @@ public class GoToCatalogPageCommand implements Command {
         Comparator<Book> comparator = getComparatorByName(comparatorName);
         List<Book> books = new BookService().getFreeBooks().stream().filter(b -> b.getName().startsWith(name))
                 .filter(b -> b.getAuthor().startsWith(author)).sorted(comparator).collect(Collectors.toList());
+        books = PaginationUtil.paginateList(books, BOOKS_PER_PAGE, req);
 
-        String pageStr = req.getParameter("page");
-        if (pageStr == null || pageStr.isEmpty()) pageStr = "0";
-        int page = Integer.parseInt(pageStr);
-
-        books = books.stream().skip(page * BOOKS_PER_PAGE).limit(BOOKS_PER_PAGE).collect(Collectors.toList());
-
-        req.getSession().setAttribute("pageNum", page);
         req.getSession().setAttribute("name", name);
         req.getSession().setAttribute("author", author);
         req.getSession().setAttribute("comparator", comparatorName);

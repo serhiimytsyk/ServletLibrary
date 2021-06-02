@@ -30,8 +30,8 @@ public class BookService {
     /**
      * Deletes book by id
      */
-    public void deleteBook(int id) {
-        bookDAO.delete(id);
+    public boolean deleteBook(int id) {
+        return bookDAO.delete(id);
     }
 
     /**

@@ -18,8 +18,8 @@ public class OrderService {
     /**
      * Deletes order by id
      */
-    public void deleteOrder(int id) {
-        orderDAO.delete(id);
+    public boolean deleteOrder(int id) {
+        return orderDAO.delete(id);
     }
 
     /**
