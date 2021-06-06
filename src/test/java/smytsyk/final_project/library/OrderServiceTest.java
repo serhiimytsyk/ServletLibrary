@@ -7,7 +7,7 @@ import smytsyk.final_project.library.service.OrderService;
 import java.time.LocalDate;
 
 public class OrderServiceTest {
-    /*@Test
+    @Test
     public void testFine() {
         LocalDate now = LocalDate.now();
         Assert.assertEquals("10", OrderService.countFine(now.minusDays(1), now));
@@ -22,5 +22,5 @@ public class OrderServiceTest {
     public void testParseDate() {
         OrderService os = new OrderService();
         Assert.assertEquals(LocalDate.of(2031, 1, 1), os.parseDate("01.01.2031"));
-    }*/
+    }
 }
